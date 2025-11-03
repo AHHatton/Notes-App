@@ -1,7 +1,6 @@
 <script setup>
   import {ref} from "vue";
 
-
   const showModal = ref(false)
   const newNote = ref("")
   const errorMessage = ref("") //empty string is falsey value
@@ -19,10 +18,14 @@
     notes.value.push({
       id: Math.floor(Math.random() * 1000),
       text: newNote.value,
-      date: new Date (),
+      date: new Date(),
       backgroundColor: getRandomColor()
     });
-    showModal.value = false
+    showModal.value = false;
+    resetModal();
+  }
+
+  const resetModal = () => {
     newNote.value = ""
     errorMessage.value = ""
   }
@@ -33,12 +36,11 @@
   <main>
 
     <div v-if="showModal" class="overlay"> <!-- v-show leaves in DOM, toggles display. Can be helpful to use this if content is good for SEO, for example -->
-      <div class="modal">
-        
+      <div class="modal">        
         <textarea v-model.trim="newNote" name="note" id="note"></textarea>
         <p v-if="errorMessage"> {{  errorMessage }}</p>
         <button @click="addNote">Add Note</button>
-        <button class="close" @click="showModal = false">Close</button>
+        <button class="close" @click="showModal = false, resetModal()">Close</button>
       </div>
     </div>
 
