@@ -1,11 +1,20 @@
 <script setup>
-  import {ref} from "vue";
+  import {ref, watch, nextTick} from "vue";
 
   const showModal = ref(false)
   const newNote = ref("")
   const errorMessage = ref("") //empty string is falsey value
   const notes = ref([])
-  
+  const noteTextArea = ref(null);
+
+
+  watch(showModal, async (newValue) => {
+    if (newValue) {
+      await nextTick();
+      noteTextArea.value?.focus();
+    }
+  })
+
   function getRandomColor() {
       return "hsl(" + Math.random() * 360 + ", 100%, 75%)";
     }
@@ -21,9 +30,16 @@
       date: new Date(),
       backgroundColor: getRandomColor()
     });
+    
     showModal.value = false;
     resetModal();
   }
+
+  // const focusTextArea = () => {
+  //   if (noteTextArea.value) {
+  //     noteTextArea.value.focus();
+  //   }
+  // };
 
   const resetModal = () => {
     newNote.value = ""
@@ -37,7 +53,7 @@
 
     <div v-if="showModal" class="overlay"> <!-- v-show leaves in DOM, toggles display. Can be helpful to use this if content is good for SEO, for example -->
       <div class="modal">        
-        <textarea v-model.trim="newNote" name="note" id="note"></textarea>
+        <textarea v-model.trim="newNote" name="note" id="note" ref="noteTextArea"></textarea>
         <p v-if="errorMessage"> {{  errorMessage }}</p>
         <button @click="addNote">Add Note</button>
         <button class="close" @click="showModal = false, resetModal()">Close</button>
@@ -47,7 +63,7 @@
     <div class="container">
       <header>
         <h1>Notes</h1>
-        <button @click="showModal = true">+</button>
+        <button @click="showModal = true, focusTextArea">+</button>
       </header>
       <div class="cards-container">
         <div 
