@@ -63,7 +63,7 @@
     <div class="container">
       <header>
         <h1>Notes</h1>
-        <button @click="showModal = true, focusTextArea">+</button>
+        <button @click="showModal = true, focusTextArea" class="round">+</button>
       </header>
       <div class="cards-container">
         <div 
@@ -73,7 +73,10 @@
           :style="{backgroundColor: note.backgroundColor}"
           >
             <p class="main-text">{{ note.text }}</p>
-            <p class="date">{{ note.date.toLocaleDateString("en-US") }}</p>
+            <div class="card-bottom">
+              <p class="date">{{ note.date.toLocaleDateString("en-US") }}</p>
+              <button @click="deleteNote(note.id)" class="delete round">-</button>
+            </div>
         </div>
       </div>
     </div>
@@ -106,7 +109,7 @@
     font-size: 75px;
   }
 
-  header button{
+  .round {
     border: none;
     padding: 10px;
     width: 50px;
@@ -116,6 +119,13 @@
     border-radius: 100%;
     color: white;
     font-size: 20px;
+  }
+
+
+  .card-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
   }
 
   .card {
